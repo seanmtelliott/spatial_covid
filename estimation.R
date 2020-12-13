@@ -40,13 +40,13 @@ W_dist <- mat2listw(W_dist_norm)
 W_FI <- mat2listw(W_FI_norm)
 
 adj_model <- spml(formula = change ~ lag_change + lag_changesq, data = data_plm , index = c("nearest_in_set2", "date"), 
-     listw = W_adj_norm, model = "within", effect="twoways", lag = TRUE, spatial.error = "kkp")
+     listw = W_adj_norm, model = "within", lag = TRUE, spatial.error = "b")
 summary(adj_model)
 
 dist_model <- spml(formula = change ~ lag_change + lag_changesq, data = data_plm, index = c("nearest_in_set2", "date"), 
-                  listw = W_dist_norm, model = "within", effect = "twoways", lag = TRUE, spatial.error = "kkp")
+                  listw = W_dist_norm, model = "within", lag = TRUE, spatial.error = "b")
 summary(dist_model)
 
 fi_model <- spml(formula = change ~ lag_change + lag_changesq, data = data_plm %>% filter(nearest_in_set2!="UIN"), index = c("nearest_in_set2", "date"), 
-                  listw = W_FI_norm, model = "within", effect = "twoways", lag = TRUE, spatial.error = "kkp")
+                  listw = W_FI_norm, model = "within", lag = TRUE, spatial.error = "b")
 summary(fi_model)
