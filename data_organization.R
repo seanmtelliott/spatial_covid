@@ -112,7 +112,7 @@ for(i in unique(data_comb$nearest_in_set2)){
   
   if(nrow(grp_sub) < ndays){
     j=j+1
-    missing_dts <- as.Date( setdiff(all_dates, unique(grp_sub$date)))
+    missing_dts <- as.Date(setdiff(all_dates, unique(grp_sub$date)))
     num_mis <- length(missing_dts)
     missing_df <- cbind.data.frame(rep(i,num_mis),missing_dts,rep(0,num_mis),grp_sub$urate_2019[1:num_mis],
                                    grp_sub$medhhinc_2018[1:num_mis],grp_sub$medhhinc_pctst_2018[1:num_mis],
@@ -130,6 +130,14 @@ data_comb_balance <- rbind.data.frame( data_comb,do.call(rbind.data.frame,missin
   mutate(change = cases - dplyr::lag(cases),
         lag_change = dplyr::lag(change),
         lag_changesq = lag_change^2)
+
+# Add in a dummy for airport hub
+
+hub_codes <- c("PHX","LAX","SFO","DEN","MIA","ORD","BWI","BOS","DEN","MCO","ATL","MDW","MSP","LAS","STL",
+               "EWR","JFK","LGA","CLT","PHL","BNA","DFW","IAH","SLC","IAD","SEA")
+
+data_comb_balance <- data_comb_balance %>%
+  mutate(hub = ifelse(nearest_in_set2 %in% hub_codes,1,0))
 
 data_plm <- pdata.frame(data_comb_balance,index=c("nearest_in_set2","date")) %>% na.omit()
 

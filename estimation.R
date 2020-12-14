@@ -22,15 +22,15 @@ load("data/spdm_input.RData")
 data_plm <- data_plm %>% ungroup()
 #Simple autoregressive model
 
-ar_model <- lm(change ~ lag_change + lag_changesq,data=data_plm)
+ar_model <- lm(change ~ lag_change + lag_changesq + urate_2019 + pct_no_hs + pov_2018 + hub,data=data_plm)
 summary(ar_model)
 
 #AR model with exogenous factors (fixed effects)
 
-ar_ex_fixed_model <-lm(change ~ lag_change + lag_changesq + factor(nearest_in_set2) - 1,data=data_plm)
+ar_ex_fixed_model <-lm(change ~ lag_change + lag_changesq + urate_2019 + pct_no_hs + pov_2018 + hub + factor(nearest_in_set2) - 1,data=data_plm)
 summary(ar_ex_fixed_model)
 
-ar_ex_loctime_fixed_model <-lm(change ~ lag_change + lag_changesq + factor(nearest_in_set2) + factor(date) - 1,data=data_plm)
+ar_ex_loctime_fixed_model <-lm(change ~ lag_change + lag_changesq + urate_2019 + pct_no_hs + pov_2018 + hub + factor(nearest_in_set2) + factor(date) - 1,data=data_plm)
 summary(ar_ex_loctime_fixed_model)
 
 # Spatial models
@@ -50,3 +50,4 @@ summary(dist_model)
 fi_model <- spml(formula = change ~ lag_change + lag_changesq, data = data_plm %>% filter(nearest_in_set2!="UIN"), index = c("nearest_in_set2", "date"), 
                   listw = W_FI_norm, model = "within", lag = TRUE, spatial.error = "b")
 summary(fi_model)
+          

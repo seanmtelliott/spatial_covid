@@ -1,4 +1,4 @@
-      #Flight data summary plots/tables
+        #Flight data summary plots/tables
       
       rm(list=ls())
       cat('\014')
@@ -66,14 +66,6 @@ ORD_plot <- plot_usmap(data = (flight_data_freq %>% filter(DEST=="ORD")), values
    scale_fill_continuous(low = "white", high = "red",name = "Incoming Flights", label = scales::comma) + 
    theme(legend.position = "right") +
   geom_point(data = all_airport_locations %>% filter(airport=="ORD"), aes(x = longitude_deg.1, y = latitude_deg.1),color = "black", alpha = 1)
-# 
-# plot_usmap(data = (flight_data_freq %>% filter(DEST=="DFW")), values = "total_flights", color = "red") + 
-#   scale_fill_continuous(low = "white", high = "red",name = "Incoming Flights", label = scales::comma) + 
-#   theme(legend.position = "right")
-# 
-# plot_usmap(data = (flight_data_freq %>% filter(DEST=="CLT")), values = "total_flights", color = "red") + 
-#   scale_fill_continuous(low = "white", high = "red",name = "Incoming Flights", label = scales::comma) + 
-#   theme(legend.position = "right")
 
 LAX_plot <- plot_usmap(data = (flight_data_freq %>% filter(DEST=="LAX")), values = "total_flights", color = "black") + 
   scale_fill_continuous(low = "white", high = "red",name = "Incoming Flights", label = scales::comma) + 
@@ -141,6 +133,12 @@ geom_point(data = county_loc_ca_map, aes(x = longitude_deg.y.1, y = latitude_deg
 ggsave(file.path(plot_dir,"CA_example_county_match.png"),ca_map)                    
             
 covid_data_date <- covid_data %>%
+  mutate(date = as.Date(date)) %>%
+  filter(date >= "2020-03-15" & date <= "2020-07-01") %>%
   group_by(date) %>%
-  summarize(cases=sum(cases))
+  summarize(cases=sum(cases)) %>%
+  mutate(changes = cases - dplyr::lag(cases))
 
+case_plot <- ggplot(data=covid_data_date) + aes(x=date,y=changes) + geom_line() + xlab("Date") + ylab("Change in Cases")
+ggsave(file.path(plot_dir,"cases.png"),case_plot)    
+  

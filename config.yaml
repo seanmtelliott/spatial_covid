@@ -1,0 +1,13 @@
+parameters:
+  initial_counts:
+    N1_init: 100000
+    N2_init: 10
+    N3_init: 0
+  disease_parameters:          
+    a: 0.1
+    c: 0.07
+  sim_parameters:  
+    time_periods: 100
+    total_reps: 100
+    r0_horizon: 100
+    r0_reps: 1      
