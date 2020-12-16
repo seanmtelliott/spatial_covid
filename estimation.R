@@ -50,4 +50,6 @@ summary(dist_model)
 fi_model <- spml(formula = change ~ lag_change + lag_changesq, data = data_plm %>% filter(nearest_in_set2!="UIN"), index = c("nearest_in_set2", "date"), 
                   listw = W_FI_norm, model = "within", lag = TRUE, spatial.error = "b")
 summary(fi_model)
+
+stargazer(ar_model,ar_ex_fixed_model)
           
